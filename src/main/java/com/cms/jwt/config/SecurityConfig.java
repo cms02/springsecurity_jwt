@@ -23,7 +23,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	
-	private final CorsFilter corsFileter;
+	private final CorsFilter corsFilter;
 	private final UserRepository userRepository;
 	
 	@Bean
@@ -37,7 +37,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		http.csrf().disable();
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 		.and()
-		.addFilter(corsFileter) //@CrossOrigin(인증X)	, 시큐리티 필터에 등록 인증(O)
+		.addFilter(corsFilter) //@CrossOrigin(인증X)	, 시큐리티 필터에 등록 인증(O)
 		.formLogin().disable()
 		.httpBasic().disable()
 		.addFilter(new JwtAuthenticationFilter(authenticationManager())) //AuthenticationManager
