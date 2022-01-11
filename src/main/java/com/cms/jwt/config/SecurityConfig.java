@@ -12,6 +12,8 @@ import org.springframework.web.filter.CorsFilter;
 
 import com.cms.jwt.filter.MyFilter3;
 import com.cms.jwt.jwt.JwtAuthenticationFilter;
+import com.cms.jwt.jwt.JwtAuthorizationFilter;
+import com.cms.jwt.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	
 	private final CorsFilter corsFileter;
+	private final UserRepository userRepository;
 	
 	@Bean
 	public BCryptPasswordEncoder PasswordEncoder() {
@@ -38,6 +41,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		.formLogin().disable()
 		.httpBasic().disable()
 		.addFilter(new JwtAuthenticationFilter(authenticationManager())) //AuthenticationManager
+		.addFilter(new JwtAuthorizationFilter(authenticationManager(), userRepository)) //AuthenticationManager
 		.authorizeRequests()
 		.antMatchers("/api/v1/user/**")
 		.access("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")

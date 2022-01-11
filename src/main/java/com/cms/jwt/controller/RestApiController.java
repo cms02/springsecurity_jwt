@@ -38,6 +38,25 @@ public class RestApiController {
 		
 	}
 	
+	//user, magager, admin 권한만 접근 가능
+	@GetMapping("/api/v1/user")
+	public String user() {
+		return "user";
+		
+	}
+	//manager, admin 권한만 접근 가능
+	@GetMapping("/api/v1/manager")
+	public String manager() {
+		return "manager";
+		
+	}
+	// admin 권한만 접근 가능
+	@GetMapping("/api/v1/admin")
+	public String admin() {
+		return "admin";
+		
+	}
+	
 	
 
 }
