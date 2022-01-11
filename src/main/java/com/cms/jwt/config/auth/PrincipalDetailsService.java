@@ -10,7 +10,7 @@ import com.cms.jwt.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
-//http://localhost:8787/login => 동장 X .formLogin().disable()
+//http://localhost:8787/login => 동작 X .formLogin().disable()
 @Service
 @RequiredArgsConstructor
 public class PrincipalDetailsService implements UserDetailsService {

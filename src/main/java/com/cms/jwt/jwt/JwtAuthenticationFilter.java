@@ -1,6 +1,7 @@
 package com.cms.jwt.jwt;
 
 import java.io.IOException;
+import java.util.Date;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -13,6 +14,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.cms.jwt.config.auth.PrincipalDetails;
 import com.cms.jwt.model.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -66,12 +69,22 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		}
 		return null;
 	}
-	//attemptAuthentication 실행 후 인증이 정상적으로 되었으면 successfulAuthentication 함수가 실행되요.
+	//attemptAuthentication 실행 후 인증이 정상적으로 되었으면 successfulAuthentication 함수가 실행됨.
 	//여기서 JWT 토큰을 만들어서 request요청한 사용자에게 JWT토큰을 response해주면 됨,
 	@Override
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
 			Authentication authResult) throws IOException, ServletException {
 		System.out.println("successfulAuthentication 실행됨 : 인증이 완료되었다는 뜻임 ");
-		super.successfulAuthentication(request, response, chain, authResult);
+		PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
+		
+		// RSA방식 X , Hash암호 방식
+		String jwtToken = JWT.create()
+				.withSubject("cos토큰")
+				.withExpiresAt(new Date(System.currentTimeMillis()+ (60000 * 10)))
+				.withClaim("id", principalDetails.getUser().getId())
+				.withClaim("username", principalDetails.getUser().getUsername())
+				.sign(Algorithm.HMAC512("cos"));
+		
+		response.addHeader("Authorization", "Bearer " + jwtToken);
 	}
 }
